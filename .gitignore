@@ -1,0 +1,16 @@
+# Ignore API keys and secrets
+.env
+
+# Python cache
+__pycache__/
+*.pyc
+
+# macOS system files
+.DS_Store
+
+# VS Code environment folder (optional)
+.vscode/
+
+# Virtual environments (in case you created one in the folder)
+sermon_env/
+.env*/  # catches env folders like .env/ or .env.bak/
