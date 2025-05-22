@@ -5,6 +5,12 @@ from flask import Flask, request, render_template_string
 from openai import OpenAI
 from pinecone import Pinecone
 from dotenv import load_dotenv
+from supabase import create_client, Client
+
+
+SUPABASE_URL = os.getenv("SUPABASE_URL")
+SUPABASE_KEY = os.getenv("SUPABASE_KEY")
+supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
 
 # Load environment variables
 load_dotenv()
@@ -210,8 +216,7 @@ def home():
                 'response': answer_text,
                 'rating': int(rating)
             }
-            with open(FEEDBACK_FILE, 'a', encoding='utf8') as f:
-                f.write(json.dumps(feedback) + '\n')
+            supabase.table("feedback").insert(feedback).execute()
             # Reset answer to avoid duplicate saves
             answer = None
         elif question:
