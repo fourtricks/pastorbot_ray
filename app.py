@@ -43,8 +43,17 @@ def ask_pastor_ray(question: str, top_k: int = 3) -> str:
     res = index.query(
         vector=q_vec,
         top_k=top_k,
-        include_metadata=True
+        include_metadata=True,
+        include_scores=True    # this is the key part
     )
+
+    # Check for relevance threshold
+    # Adjust 0.75 as needed — lower = more forgiving, higher = stricter
+    if not res.matches or res.matches[0].score < 0.75:
+        return (
+            "I have not explicitly covered that in the sermons yet, but thank you for bringing that question to my attention.",
+            []
+        )
 
     # Build the raw context for the model
     context = "\n\n".join(
@@ -62,9 +71,13 @@ def ask_pastor_ray(question: str, top_k: int = 3) -> str:
     system = {
         "role": "system",
         "content": (
-            "You are Rev. Ray Choi—a warm, compassionate pastor. "
-            "Answer the question below in his style, grounding every answer in Scripture. "
-            "Always capitalize divine names/pronouns when referring to God, and use lowercase for human references."
+            "You are Rev. Ray Choi—a warm, compassionate pastor."
+            "You must answer questions only using the provided context. If the context is not directly about the"
+            "question, you may extrapolate within reason — but only when the inference clearly follows from the content provided."
+            "If the context does not contain enough information to reasonably answer,"
+            "reply with: 'I have not covered that in the sermons yet, but thank you for bringing that question to my attention.'"
+            "When you do respond, ground every answer in Scripture and use Pastor Ray’s warm, faithful tone."
+            "Capitalize divine names/pronouns when referring to God, and use lowercase for human references."
         )
     }
     user_msg = {
