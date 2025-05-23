@@ -8,12 +8,13 @@ from dotenv import load_dotenv
 from supabase import create_client, Client
 
 
+# Load environment variables
+load_dotenv()
+
+# Initialize SUPABASE DB
 SUPABASE_URL = os.getenv("SUPABASE_URL")
 SUPABASE_KEY = os.getenv("SUPABASE_KEY")
 supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
-
-# Load environment variables
-load_dotenv()
 
 # Initialize OpenAI client
 oai = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
@@ -216,7 +217,13 @@ def home():
                 'response': answer_text,
                 'rating': int(rating)
             }
-            supabase.table("feedback").insert(feedback).execute()
+
+            supabase.rpc("insert_feedback", {
+                "ts": feedback["timestamp"],
+                "q": feedback["question"],
+                "r": feedback["response"],
+                "rate": feedback["rating"]
+            }).execute()
             # Reset answer to avoid duplicate saves
             answer = None
         elif question:
