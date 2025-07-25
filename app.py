@@ -147,6 +147,10 @@ template = """
   </form>
   {% if answer %}
     <div class="response">
+      <h2>Your Question:</h2>
+      <p style="font-style: italic; background: #eef2f7; padding: 0.5rem; border-left: 3px solid #4a90e2;">
+        {{ request.form.get('question') }}
+      </p>
       <h2>PastorBot Ray says:</h2>
       {% for para in answer.split('\n\n') %}
         <p>{{ para }}</p>

@@ -16,9 +16,9 @@ def save_text_to_file(text, filename):
 
 # 🔹 Paste your content and desired file name below
 text_to_save = """
-insert text here
+insert body of text here
 """
 
-file_name = "insert title here"  # No .txt extension needed
+file_name = "insert file name here"  # No .txt extension needed
 
 save_text_to_file(text_to_save, file_name)

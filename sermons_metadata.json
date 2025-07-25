@@ -1,5 +1,261 @@
 [
-    {
+      {
+        "sermon_id": "2025-07-22-not-guilty-but-am-i-innocent",
+        "title": "Not Guilty, But Am I Innocent?",
+        "preacher": "Rev. Ray Choi",
+        "date": "2025-07-22",
+        "series": null,
+        "passages": [
+          "Romans 5:8–10",
+          "Romans 6:1–23",
+          "Romans 4:3"
+        ],
+        "tags": ["justification", "sanctification", "obedience", "repentance", "righteousness"],
+        "summary": "Rev. Ray Choi explores the distinction between being declared 'not guilty' through justification and proving one's innocence through a life of sanctification. Using the analogy of a courtroom and Paul’s teaching in Romans, he urges believers to walk in newness of life, present themselves to God daily, and live in obedience—proving their transformation through a life freed from the slavery of sin.",
+        "transcript_file": "2025-07-22-not-guilty-but-am-i-innocent.txt",
+        "url": "https://hillcc.org/2025/07/22/not-guilty-but-am-i-innocent/"
+      },
+      {
+        "sermon_id": "2025-07-15-two-mindsets-one-gospel",
+        "title": "Two Mindsets, One Gospel",
+        "preacher": "Rev. Ray Choi",
+        "date": "2025-07-15",
+        "series": null,
+        "passages": [
+          "Romans 1:16–17",
+          "Romans 2:1–13",
+          "Romans 3:5–31",
+          "Romans 4:3–25"
+        ],
+        "tags": ["gospel", "faith", "righteousness", "repentance", "law and grace"],
+        "summary": "Rev. Ray Choi begins a study of Romans by contrasting Jewish and Gentile mindsets—legalism versus libertinism—showing that both fall short of God’s standard. The true gospel centers on justification by faith, not works, and leads to a transformed life. Believers are called not only to receive this gift but to uphold God's law through Spirit-empowered obedience and spread the gospel to the ends of the earth.",
+        "transcript_file": "2025-07-15-two-mindsets-one-gospel.txt",
+        "url": "https://hillcc.org/2025/07/15/two-mindsets-one-gospel/"
+      },
+      {
+        "sermon_id": "2025-07-07-does-god-feel-far",
+        "title": "Does God Feel Far?",
+        "preacher": "Rev. Ray Choi",
+        "date": "2025-07-07",
+        "series": null,
+        "passages": [
+          "Luke 18:9–14",
+          "Psalm 138:6",
+          "James 4:8",
+          "James 1",
+          "Hebrews 12"
+        ],
+        "tags": ["humility", "repentance", "self-righteousness", "intimacy with God", "pride"],
+        "summary": "Rev. Ray Choi teaches that if God feels far, the root may be pride and self-righteousness. Through the parable of the Pharisee and the tax collector, he reminds believers that God's grace draws near to the humble. Confessing our sin and praying 'Have mercy on me, a sinner' restores closeness with God and protects against the dangers of judgmentalism.",
+        "transcript_file": "2025-07-07-does-god-feel-far.txt",
+        "url": "https://hillcc.org/2025/07/07/does-god-feel-far/"
+      },
+      {
+        "sermon_id": "2025-06-29-love-and-fear",
+        "title": "Love and Fear",
+        "preacher": "Rev. Ray Choi",
+        "date": "2025-06-29",
+        "series": null,
+        "passages": [
+          "Psalm 86",
+          "1 John 4:17–19",
+          "Ephesians 1:18",
+          "Ephesians 3:18",
+          "Jeremiah 32:40",
+          "Proverbs 3:7",
+          "2 Corinthians 5:14–15"
+        ],
+        "tags": ["love of God", "fear of the Lord", "identity", "grace", "holiness"],
+        "summary": "Rev. Ray Choi explores the essential balance of receiving God's perfect love and maintaining holy fear. He teaches that Christians are fully loved by the Father before doing anything to earn it, and this love should eliminate fear of punishment. At the same time, reverent fear helps believers avoid sin and remain close to God, not from fear of wrath but out of desire to honor Him.",
+        "transcript_file": "2025-06-29-love-and-fear.txt",
+        "url": "https://hillcc.org/2025/06/29/love-and-fear/"
+      },
+      {
+        "sermon_id": "2025-06-22-the-greatest-title-anyone-can-have",
+        "title": "The Greatest Title Anyone Can Have",
+        "preacher": "Rev. Ray Choi",
+        "date": "2025-06-22",
+        "series": null,
+        "passages": [
+          "Luke 10:17–24",
+          "1 Corinthians 13:9–12",
+          "Matthew 23:5–12",
+          "1 John 2:26–27"
+        ],
+        "tags": ["identity", "child of God", "humility", "revelation", "spiritual growth"],
+        "summary": "Rev. Ray Choi teaches that the greatest identity a believer can have is being a child of God. Rather than striving for worldly or religious titles, Christians are called to humility, dependence on the Holy Spirit, and rejoicing that their names are written in heaven. Spiritual maturity comes not from intellect or achievement but from daily childlike dependence on Jesus and the Spirit’s revelation.",
+        "transcript_file": "2025-06-22-the-greatest-title-anyone-can-have.txt",
+        "url": "https://hillcc.org/2025/06/22/the-greatest-title-anyone-can-have/"
+      },
+      {
+        "sermon_id": "2025-06-15-fathers-day-2025",
+        "title": "Father’s Day 2025",
+        "preacher": "Rev. Ray Choi",
+        "date": "2025-06-15",
+        "series": null,
+        "passages": [
+          "Romans 8:12–17",
+          "Romans 2:1–5",
+          "1 John 4:18",
+          "Luke 15",
+          "Acts 26:20",
+          "Hebrews 12"
+        ],
+        "tags": ["Fatherhood", "repentance", "discipline", "adoption", "love of God"],
+        "summary": "On Father’s Day, Rev. Ray Choi reflects on the character of our Heavenly Father—loving yet firm. He teaches that God's kindness and patience are meant to lead us to repentance, not to be taken for granted. True sonship involves turning from sin, honoring God with reverence, and proving repentance through a changed life.",
+        "transcript_file": "2025-06-15-fathers-day-2025.txt",
+        "url": "https://hillcc.org/2025/06/15/fathers-day-2025/"
+      },
+      {
+        "sermon_id": "2025-06-09-pentecost-sunday-2025-better-audio",
+        "title": "Pentecost Sunday 2025",
+        "preacher": "Rev. Ray Choi",
+        "date": "2025-06-09",
+        "series": null,
+        "passages": [
+          "1 Kings 19",
+          "Ephesians 1:13–14",
+          "Ephesians 4:4–7",
+          "Ephesians 5:15–21",
+          "1 Corinthians 12",
+          "Matthew 7",
+          "John 16",
+          "Acts 2"
+        ],
+        "tags": ["Holy Spirit", "spiritual gifts", "baptism", "discernment", "Pentecost"],
+        "summary": "Rev. Ray Choi leads a Pentecost Sunday discussion on the person and work of the Holy Spirit, emphasizing the need for a deeper filling beyond the initial sealing at salvation. He explains the gifts of the Spirit, the importance of discernment, and the need to avoid grieving or quenching the Spirit, urging believers to pursue a Spirit-filled life that produces humility, unity, and spiritual power.",
+        "transcript_file": "2025-06-09-pentecost-sunday-2025-better-audio.txt",
+        "url": "https://hillcc.org/2025/06/09/pentecost-sunday-2025-better-audio/"
+      },
+      {
+        "sermon_id": "2025-06-03-genuine-repentance-and-costly-forgiveness",
+        "title": "Genuine Repentance and Costly Forgiveness",
+        "preacher": "Rev. Ray Choi",
+        "date": "2025-06-03",
+        "series": null,
+        "passages": [
+          "Acts 26:20",
+          "Genesis 37–50"
+        ],
+        "tags": ["repentance", "forgiveness", "brokenness", "heart of God", "transformation"],
+        "summary": "Rev. Ray Choi emphasizes that true repentance involves more than remorse—it requires turning to God and producing lasting change. Using Paul’s message in Acts and the story of Joseph, he illustrates the Father’s grief over sin, the costly nature of forgiveness, and how transformation is only possible through genuine encounters with God.",
+        "transcript_file": "2025-06-03-genuine-repentance-and-costly-forgiveness.txt",
+        "url": "https://hillcc.org/2025/06/03/genuine-repentance-and-costly-forgiveness/"
+      },
+      {
+        "sermon_id": "2025-05-27-tenderhearted",
+        "title": "Tenderhearted",
+        "preacher": "Rev. Ray Choi",
+        "date": "2025-05-27",
+        "series": null,
+        "passages": [
+          "Psalm 103:1–12",
+          "Leviticus 19:17–18",
+          "1 Peter 3:8–9",
+          "Ephesians 4:31–32",
+          "Colossians 3:12–13",
+          "1 John 3:17",
+          "James 5:10–11",
+          "Job 42:7–9",
+          "1 Corinthians 13:4–7"
+        ],
+        "tags": ["forgiveness", "grudges", "tenderheartedness", "compassion", "Christlike love"],
+        "summary": "Rev. Ray Choi teaches on the importance of cultivating a tender heart like Christ's, letting go of grudges, and blessing those who have wronged us. Drawing from Scripture, he emphasizes that true forgiveness flows from deep inner compassion and is necessary for spiritual healing, emotional integrity, and restoring broken relationships—even when reconciliation isn't possible.",
+        "transcript_file": "2025-05-27-tenderhearted.txt",
+        "url": "https://hillcc.org/2025/05/27/tenderhearted/"
+      },
+      {
+        "sermon_id": "2025-05-19-blessing-those-who-curse-us",
+        "title": "Blessing Those Who Curse Us",
+        "preacher": "Rev. Ray Choi",
+        "date": "2025-05-19",
+        "series": null,
+        "passages": [
+          "1 Peter 3:9",
+          "Romans 12:14",
+          "Romans 12:17",
+          "Romans 12:19",
+          "Romans 12:21",
+          "Luke 6:27–28",
+          "James 3:7–12",
+          "1 John 2:10–11",
+          "1 John 3:11–12",
+          "1 John 3:15"
+        ],
+        "tags": ["blessing", "forgiveness", "prayer", "hatred", "indifference"],
+        "summary": "Rev. Ray Choi teaches that true Christian love involves blessing those who curse or harm us—not just avoiding retaliation, but actively praying for their salvation. He warns that indifference toward others, especially those in our families or churches, is a subtle form of hatred, and urges believers to overcome evil with good by extending genuine blessing through intercession.",
+        "transcript_file": "2025-05-19-blessing-those-who-curse-us.txt",
+        "url": "https://hillcc.org/2025/05/19/blessing-those-who-curse-us/"
+      },
+      {
+        "sermon_id": "2025-05-12-binding-and-loosing",
+        "title": "Binding and Loosing",
+        "preacher": "Rev. Ray Choi",
+        "date": "2025-05-12",
+        "series": null,
+        "passages": [
+          "Matthew 18:15–20",
+          "1 Corinthians 5:5–13",
+          "Matthew 16:13–23",
+          "Mark 9:43"
+        ],
+        "tags": ["binding and loosing", "church discipline", "authority", "repentance", "spiritual warfare"],
+        "summary": "Rev. Ray Choi explains the biblical concept of binding and loosing in two contexts: addressing sin in the church and exercising authority over spiritual forces. He stresses the responsibility of believers to confront unrepentant sin in love and accountability, while also emphasizing the spiritual power of proclaiming Christ and resisting evil as a united body.",
+        "transcript_file": "2025-05-12-binding-and-loosing.txt",
+        "url": "https://hillcc.org/2025/05/12/binding-and-loosing/"
+      },
+      {
+        "sermon_id": "2025-05-06-humility-2",
+        "title": "Humility (Part 2)",
+        "preacher": "Rev. Ray Choi",
+        "date": "2025-05-06",
+        "series": null,
+        "passages": [
+          "Matthew 18:1–14",
+          "Luke 15:1–7",
+          "John 15:5"
+        ],
+        "tags": ["humility", "pride", "repentance", "gentleness", "church leadership"],
+        "summary": "Rev. Ray Choi exhorts believers to humble themselves like little children, emphasizing fierce accountability for one's own sin and gentle care toward others. He warns against prideful leadership that drives people away from faith and encourages a daily posture of repentance, dependency on Jesus, and responsibility for not stumbling others.",
+        "transcript_file": "2025-05-06-humility-2.txt",
+        "url": "https://hillcc.org/2025/05/06/humility-2/"
+      },
+      {
+        "sermon_id": "2025-04-28-victory-over-sin",
+        "title": "Victory Over Sin",
+        "preacher": "Rev. Ray Choi",
+        "date": "2025-04-28",
+        "series": null,
+        "passages": [
+          "1 Corinthians 15:55–58",
+          "Matthew 15:18–20"
+        ],
+        "tags": ["victory", "sin", "spiritual growth", "repentance", "transformation"],
+        "summary": "Rev. Ray Choi emphasizes that just as believers affirm victory over death through Christ's resurrection, they must also claim the promised victory over sin. By examining the condition of the heart through speech and intentionally pursuing transformation in Christ, Christians can overcome entrenched sin patterns and live in true freedom.",
+        "transcript_file": "2025-04-28-victory-over-sin.txt",
+        "url": "https://hillcc.org/2025/04/28/victory-over-sin/"
+      },
+      {
+        "sermon_id": "2025-04-21-resurrection-sunday",
+        "title": "Resurrection Sunday",
+        "preacher": "Rev. Ray Choi",
+        "date": "2025-04-21",
+        "series": null,
+        "passages": [
+          "1 Corinthians 15:56–57",
+          "Romans 5:18–21",
+          "Romans 6:1–4",
+          "Romans 7:5–6",
+          "Romans 7:9–12",
+          "Romans 7:21–25",
+          "Galatians 5:24"
+        ],
+        "tags": ["resurrection", "victory over sin", "law and grace", "new life", "sanctification"],
+        "summary": "This Resurrection Sunday message celebrates the victory over sin through Jesus Christ. Rev. Ray Choi explains how believers are no longer under the burden of the law but are empowered by the Spirit to walk in newness of life and overcome sin through Christ’s resurrection.",
+        "transcript_file": "2025-04-21-resurrection-sunday.txt",
+        "url": "https://hillcc.org/2025/04/21/resurrection-sunday/"
+      },
+      {
         "sermon_id": "2025-04-15-suffering-for-christ",
         "title": "Suffering for Christ",
         "preacher": "Rev. Ray Choi",
