@@ -6,6 +6,7 @@ from slugify import slugify
 from dotenv import load_dotenv
 from openai import OpenAI
 from pinecone import Pinecone
+from supabase import create_client
 from embed_sermons import chunk_text  # reuse your chunking function
 
 # Load environment variables
@@ -17,9 +18,8 @@ client = OpenAI(api_key=openai.api_key)
 pc = Pinecone(api_key=os.getenv("PINECONE_API_KEY"))
 index = pc.Index("pastor-ray-sermons")
 
-# Paths
-SERMONS_DIR = "sermons"
-METADATA_PATH = "sermons_metadata.json"
+# Supabase client (use service role key for secure inserts)
+supabase = create_client(os.getenv("SUPABASE_URL"), os.getenv("SUPABASE_KEY"))
 
 st.set_page_config(page_title="Sermon Uploader", layout="centered")
 st.title("📖 Sermon Transcript Uploader")
@@ -38,7 +38,6 @@ if not st.session_state.authenticated:
         placeholder=""
     )
 
-    # Handle both Enter key submit and button click
     login_pressed = st.button("Login")
     if login_pressed or (password and not login_pressed and st.session_state.password_input != ""):
         if password == os.getenv("UPLOAD_PASSWORD"):
@@ -70,14 +69,16 @@ if submitted:
     slug = slugify(title)
     sermon_id = f"{date_str}-{slug}"
     filename = f"{sermon_id}.txt"
-    filepath = os.path.join(SERMONS_DIR, filename)
 
-    # Save transcript
-    os.makedirs(SERMONS_DIR, exist_ok=True)
-    with open(filepath, "w", encoding="utf-8") as f:
-        f.write(transcript.strip())
-
-    st.success(f"✅ Transcript saved to {filepath}")
+    # --- Upload transcript to Supabase Storage ---
+    try:
+        file_bytes = transcript.encode("utf-8")
+        supabase.storage.from_("sermons").upload(filename, file_bytes, {"content-type": "text/plain"})
+        public_url = supabase.storage.from_("sermons").get_public_url(filename)
+        st.success("✅ Transcript uploaded to Supabase Storage")
+    except Exception as e:
+        st.error(f"❌ Failed to upload transcript to Supabase Storage: {e}")
+        st.stop()
 
     # --- Generate metadata using OpenAI ---
     prompt = f"""
@@ -93,7 +94,7 @@ Your task is to extract and return a JSON object with exactly the following fiel
   "passages": [],
   "tags": [],
   "summary": "",
-  "transcript_file": "{filename}",
+  "transcript_file": "{public_url}",
   "url": "{url}"
 }}
 
@@ -120,21 +121,11 @@ Sermon transcript:
         metadata_raw = response.choices[0].message.content.strip()
         metadata = json.loads(metadata_raw)
 
-        # Append to JSON file
-        if os.path.exists(METADATA_PATH):
-            with open(METADATA_PATH, encoding="utf-8") as f:
-                existing = json.load(f)
-        else:
-            existing = []
+        # Insert metadata into Supabase table
+        supabase.rpc("insert_sermon_metadata", metadata).execute()
+        st.success("✅ Metadata inserted into Supabase table")
 
-        existing.append(metadata)
-
-        with open(METADATA_PATH, "w", encoding="utf-8") as f:
-            json.dump(existing, f, indent=2, ensure_ascii=False)
-
-        st.success("✅ Metadata extracted and saved to sermons_metadata.json")
-
-        # --- Embed and upsert ---
+        # --- Embed and upsert into Pinecone ---
         chunks = chunk_text(transcript)
         vectors = []
 

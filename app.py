@@ -1,5 +1,5 @@
 import os
-import json
+# import json
 from datetime import datetime
 from flask import Flask, request, render_template_string
 from openai import OpenAI
@@ -26,8 +26,8 @@ index = pc.Index("pastor-ray-sermons")
 FEEDBACK_FILE = "feedback.jsonl"
 
 # Load sermons metadata into a dict for quick lookup
-with open("sermons_metadata.json", encoding="utf8") as f:
-    sermon_meta = {s["sermon_id"]: s for s in json.load(f)}
+resp = supabase.table("sermons_metadata").select("*").execute()
+sermon_meta = {s["sermon_id"]: s for s in resp.data}
 
 
 # Helper: ask Pastor Ray using RAG + fine-tuned model

@@ -1,21 +1,25 @@
 import os
-import json
+import requests
 from openai import OpenAI
 from pinecone import Pinecone
 from dotenv import load_dotenv
 from tqdm import tqdm
+from supabase import create_client
 
 load_dotenv()
 
-# 1) Initialize OpenAI client
+# Initialize OpenAI client
 client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
-# 2) Initialize Pinecone & select your index
+# Initialize Pinecone
 pc = Pinecone(api_key=os.getenv("PINECONE_API_KEY"))
 index = pc.Index("pastor-ray-sermons")
 
+# Initialize Supabase (anon key fine for reads, service key for bulk updates if needed)
+supabase = create_client(os.getenv("SUPABASE_URL"), os.getenv("SUPABASE_KEY"))
 
-# 3) Helper to chunk text into ~1500-char pieces
+
+# Helper: chunk text into ~1500-character pieces
 def chunk_text(text, max_length=1500):
     paras = text.split("\n\n")
     chunks, current = [], ""
@@ -30,24 +34,32 @@ def chunk_text(text, max_length=1500):
     return chunks
 
 
-# 4) Only run embedding if this script is executed directly
 if __name__ == "__main__":
-    # Load metadata
-    with open("sermons_metadata.json", encoding="utf8") as f:
-        sermons = json.load(f)
+    # 1) Load all sermon metadata from Supabase
+    resp = supabase.table("sermons_metadata").select("*").execute()
+    sermons = resp.data
+    if not sermons:
+        print("❌ No sermons found in Supabase.")
+        exit()
 
-    # Embed & upsert
+    # 2) Embed & upsert
     for sermon in tqdm(sermons, desc="Embedding sermons"):
-        # load transcript
-        path = os.path.join("sermons", sermon["transcript_file"])
-        with open(path, encoding="utf8") as f:
-            text = f.read()
+        transcript_url = sermon["transcript_file"]
+
+        # Download transcript text from Supabase Storage
+        try:
+            r = requests.get(transcript_url)
+            r.raise_for_status()
+            text = r.text
+        except Exception as e:
+            print(f"❌ Failed to download transcript for {sermon['sermon_id']}: {e}")
+            continue
 
         chunks = chunk_text(text)
         vectors = []
 
         for idx, chunk in enumerate(chunks):
-            # create a 1536-dim embedding
+            # Create a 1536-dim embedding
             res = client.embeddings.create(
                 model="text-embedding-ada-002",
                 input=chunk
@@ -65,7 +77,7 @@ if __name__ == "__main__":
                 }
             ))
 
-        # batch upsert in blocks of 100
+        # Batch upsert in blocks of 100
         for i in range(0, len(vectors), 100):
             index.upsert(vectors=vectors[i: i+100])
 
