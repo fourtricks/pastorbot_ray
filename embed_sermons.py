@@ -14,12 +14,8 @@ client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 pc = Pinecone(api_key=os.getenv("PINECONE_API_KEY"))
 index = pc.Index("pastor-ray-sermons")
 
-# 3) Load metadata
-with open("sermons_metadata.json", encoding="utf8") as f:
-    sermons = json.load(f)
 
-
-# 4) Helper to chunk text into ~1500-char pieces
+# 3) Helper to chunk text into ~1500-char pieces
 def chunk_text(text, max_length=1500):
     paras = text.split("\n\n")
     chunks, current = [], ""
@@ -34,37 +30,43 @@ def chunk_text(text, max_length=1500):
     return chunks
 
 
-# 5) Embed & upsert
-for sermon in tqdm(sermons, desc="Embedding sermons"):
-    # load transcript
-    path = os.path.join("sermons", sermon["transcript_file"])
-    with open(path, encoding="utf8") as f:
-        text = f.read()
+# 4) Only run embedding if this script is executed directly
+if __name__ == "__main__":
+    # Load metadata
+    with open("sermons_metadata.json", encoding="utf8") as f:
+        sermons = json.load(f)
 
-    chunks = chunk_text(text)
-    vectors = []
+    # Embed & upsert
+    for sermon in tqdm(sermons, desc="Embedding sermons"):
+        # load transcript
+        path = os.path.join("sermons", sermon["transcript_file"])
+        with open(path, encoding="utf8") as f:
+            text = f.read()
 
-    for idx, chunk in enumerate(chunks):
-        # create a 1536-dim embedding
-        res = client.embeddings.create(
-            model="text-embedding-ada-002",
-            input=chunk
-        )
-        emb = res.data[0].embedding
+        chunks = chunk_text(text)
+        vectors = []
 
-        vectors.append((
-            f"{sermon['sermon_id']}_chunk{idx}",
-            emb,
-            {
-                "sermon_id":  sermon["sermon_id"],
-                "title":      sermon["title"],
-                "passages":   ", ".join(sermon["passages"]),
-                "chunk_text": chunk
-            }
-        ))
+        for idx, chunk in enumerate(chunks):
+            # create a 1536-dim embedding
+            res = client.embeddings.create(
+                model="text-embedding-ada-002",
+                input=chunk
+            )
+            emb = res.data[0].embedding
 
-    # batch upsert in blocks of 100
-    for i in range(0, len(vectors), 100):
-        index.upsert(vectors=vectors[i: i+100])
+            vectors.append((
+                f"{sermon['sermon_id']}_chunk{idx}",
+                emb,
+                {
+                    "sermon_id":  sermon["sermon_id"],
+                    "title":      sermon["title"],
+                    "passages":   ", ".join(sermon["passages"]),
+                    "chunk_text": chunk
+                }
+            ))
 
-print("✅ All sermons embedded with OpenAI and uploaded to Pinecone.")
+        # batch upsert in blocks of 100
+        for i in range(0, len(vectors), 100):
+            index.upsert(vectors=vectors[i: i+100])
+
+    print("✅ All sermons embedded with OpenAI and uploaded to Pinecone.")
