@@ -7,7 +7,6 @@ from pinecone import Pinecone
 from dotenv import load_dotenv
 from supabase import create_client, Client
 
-
 # Load environment variables
 load_dotenv()
 
@@ -18,6 +17,7 @@ supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
 
 # Initialize OpenAI client
 oai = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+
 # Initialize Pinecone client
 pc = Pinecone(api_key=os.getenv("PINECONE_API_KEY"), environment=os.getenv("PINECONE_ENVIRONMENT"))
 index = pc.Index("pastor-ray-sermons")
@@ -25,9 +25,35 @@ index = pc.Index("pastor-ray-sermons")
 # Path for feedback storage
 FEEDBACK_FILE = "feedback.jsonl"
 
-# Load sermons metadata into a dict for quick lookup
-resp = supabase.table("sermons_metadata").select("*").execute()
-sermon_meta = {s["sermon_id"]: s for s in resp.data}
+
+# ---- metadata loading + safe fetch helpers ----
+def load_all_meta():
+    resp = supabase.table("sermons_metadata").select("*").execute()
+    return {s["sermon_id"]: s for s in resp.data}
+
+
+sermon_meta = load_all_meta()
+
+
+def fetch_meta_by_id(sid: str):
+    """Safe metadata fetch: check in-memory first, then Supabase (and cache it)."""
+    meta = sermon_meta.get(sid)
+    if meta:
+        return meta
+    try:
+        res = supabase.table("sermons_metadata").select("*").eq("sermon_id", sid).limit(1).execute()
+        rows = res.data or []
+        if rows:
+            sermon_meta[sid] = rows[0]  # cache for next time
+            return rows[0]
+    except Exception as e:
+        print(f"[warn] Supabase fetch failed for {sid}: {e}")
+    print(f"[warn] Missing metadata for {sid}")
+    return None
+
+
+print(f"[init] Supabase URL: {SUPABASE_URL}")
+print(f"[init] Loaded {len(sermon_meta)} sermon metadata rows.")
 
 
 # Helper: ask Pastor Ray using RAG + fine-tuned model
@@ -65,7 +91,10 @@ def ask_pastor_ray(question: str, top_k: int = 3) -> str:
     for m in res.matches:
         sid = m.metadata["sermon_id"]
         if sid not in sermon_infos:
-            sermon_infos[sid] = sermon_meta[sid]   # full metadata dict
+            meta = fetch_meta_by_id(sid)
+            if not meta:
+                continue
+            sermon_infos[sid] = meta   # full metadata dict
 
     # Build messages
     system = {
@@ -103,10 +132,12 @@ def ask_pastor_ray(question: str, top_k: int = 3) -> str:
     citations = []
     for m in res.matches:
         sid = m.metadata["sermon_id"]
-        info = sermon_meta[sid]
+        info = fetch_meta_by_id(sid)
+        if not info:
+            continue
         link_html = (
-            f'<a href="{info["url"]}" target="_blank" rel="noopener noreferrer">'
-            f'{info["title"]}</a> ({info["date"]})'
+            f'<a href="{info.get("url", "#")}" target="_blank" rel="noopener noreferrer">'
+            f'{info.get("title", sid)}</a> ({info.get("date", "")})'
         )
         chunk = m.metadata["chunk_text"].strip()
         citations.append({"link": link_html, "chunk": chunk})
@@ -116,6 +147,15 @@ def ask_pastor_ray(question: str, top_k: int = 3) -> str:
 
 # Flask app setup
 app = Flask(__name__)
+
+
+# Auto-refresh metadata when app.debug is True so the dict isn't stale (optional but helpful)
+@app.before_request
+def maybe_refresh_meta():
+    global sermon_meta
+    if app.debug:
+        sermon_meta = load_all_meta()
+
 
 template = """
 <!doctype html>

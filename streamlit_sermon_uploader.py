@@ -73,8 +73,17 @@ if submitted:
     # --- Upload transcript to Supabase Storage ---
     try:
         file_bytes = transcript.encode("utf-8")
-        supabase.storage.from_("sermons").upload(filename, file_bytes, {"content-type": "text/plain"})
-        public_url = supabase.storage.from_("sermons").get_public_url(filename)
+        # upsert=True so re-uploads overwrite instead of throwing an error
+        supabase.storage.from_("sermons").upload(
+            filename,
+            file_bytes,
+            {"content-type": "text/plain", "upsert": True}
+        )
+        public_url_res = supabase.storage.from_("sermons").get_public_url(filename)
+        # handle both dict and str returns from client
+        public_url = public_url_res.get("publicUrl") if isinstance(public_url_res, dict) else public_url_res
+        if not isinstance(public_url, str) or not public_url:
+            raise RuntimeError("Could not obtain a public URL for the uploaded transcript.")
         st.success("✅ Transcript uploaded to Supabase Storage")
     except Exception as e:
         st.error(f"❌ Failed to upload transcript to Supabase Storage: {e}")
@@ -99,13 +108,13 @@ Your task is to extract and return a JSON object with exactly the following fiel
 }}
 
 Instructions:
-\t•\tPreacher is always \"Rev. Ray Choi\" (no need to infer).
-\t•\tDerive sermon_id and transcript_file using the date and a slugified version of the title.
-\t•\tIf series is not mentioned, set it to null.
-\t•\tExtract all cited Scripture passages into the passages array.
-\t•\tTags should be 3–5 concise themes from the sermon.
-\t•\tSummary should faithfully capture the heart of the message in 1–2 sentences.
-\t•\tOutput only the JSON object—no extra commentary or text.
+    • Preacher is always "Rev. Ray Choi" (no need to infer).
+    • Derive sermon_id and transcript_file using the date and a slugified version of the title.
+    • If series is not mentioned, set it to null.
+    • Extract all cited Scripture passages into the passages array.
+    • Tags should be 3–5 concise themes from the sermon.
+    • Summary should faithfully capture the heart of the message in 1–2 sentences.
+    • Output only the JSON object—no extra commentary or text.
 
 Sermon transcript:
 {transcript.strip()}
@@ -121,7 +130,26 @@ Sermon transcript:
         metadata_raw = response.choices[0].message.content.strip()
         metadata = json.loads(metadata_raw)
 
-        # Insert metadata into Supabase table
+        # --- normalize schema (force arrays, ensure required keys) ---
+        def as_list(x):
+            if x is None or x == {} or x == "":
+                return []
+            return x if isinstance(x, list) else [x]
+
+        # Canonicalize key fields we absolutely control
+        metadata["sermon_id"] = sermon_id
+        metadata["title"] = title
+        metadata["date"] = date_str
+        metadata["url"] = url
+        metadata["preacher"] = "Rev. Ray Choi"
+        # canonical transcript location in Storage
+        metadata["transcript_file"] = public_url
+
+        # Arrays (avoid {} vs [] drift)
+        metadata["passages"] = as_list(metadata.get("passages"))
+        metadata["tags"] = as_list(metadata.get("tags"))
+
+        # Insert metadata into Supabase table (via your RPC)
         supabase.rpc("insert_sermon_metadata", metadata).execute()
         st.success("✅ Metadata inserted into Supabase table")
 
@@ -141,15 +169,20 @@ Sermon transcript:
                 {
                     "sermon_id":  sermon_id,
                     "title":      title,
+                    "date":       date_str,               # helpful for debugging/filters
                     "passages":   ", ".join(metadata["passages"]),
                     "chunk_text": chunk
                 }
             ))
 
+        # Batch upserts (100 at a time)
         for i in range(0, len(vectors), 100):
             index.upsert(vectors=vectors[i: i+100])
 
         st.success("✅ Embedded and upserted to Pinecone")
+
+        # Optional: show a quick summary to the uploader
+        st.info(f"Uploaded **{sermon_id}** with {len(chunks)} chunks.")
 
     except Exception as e:
         st.error(f"❌ Error: {e}")
