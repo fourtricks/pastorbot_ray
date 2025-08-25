@@ -73,17 +73,22 @@ if submitted:
     # --- Upload transcript to Supabase Storage ---
     try:
         file_bytes = transcript.encode("utf-8")
-        # upsert=True so re-uploads overwrite instead of throwing an error
+
         supabase.storage.from_("sermons").upload(
-            filename,
-            file_bytes,
-            {"content-type": "text/plain", "upsert": True}
+            path=filename,
+            file=file_bytes,
+            file_options={
+                "contentType": "text/plain; charset=utf-8",
+                "cacheControl": "3600",   # must be a string
+                "upsert": "true"          # must be "true"/"false", not True/False
+            }
         )
+
         public_url_res = supabase.storage.from_("sermons").get_public_url(filename)
-        # handle both dict and str returns from client
         public_url = public_url_res.get("publicUrl") if isinstance(public_url_res, dict) else public_url_res
         if not isinstance(public_url, str) or not public_url:
             raise RuntimeError("Could not obtain a public URL for the uploaded transcript.")
+
         st.success("✅ Transcript uploaded to Supabase Storage")
     except Exception as e:
         st.error(f"❌ Failed to upload transcript to Supabase Storage: {e}")
