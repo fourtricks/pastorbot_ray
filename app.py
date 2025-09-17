@@ -44,7 +44,7 @@ TUNING = {
     # Generation controls (drift vs. strictness)
     "MODEL_ID":                 os.getenv("FT_MODEL_ID", "ft:gpt-4.1-mini-2025-04-14:easycloud::CA2f3fbc"),  # ★ main chat model
     "TEMPERATURE":              float(os.getenv("TEMPERATURE", "0.2")),  # ★ lower = stricter; higher = more flexible
-    "MAX_TOKENS":               int(os.getenv("MAX_TOKENS", "450")),     # ★ longer answers vs. concise 
+    "MAX_TOKENS":               int(os.getenv("MAX_TOKENS", "450")),     # ★ longer answers vs. concise
 
     # Embeddings model
     "EMBEDDING_MODEL":          os.getenv("EMBEDDING_MODEL", "text-embedding-ada-002"),  # ★ swap to text-embedding-3-large if desired
