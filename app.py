@@ -44,7 +44,7 @@ TUNING = {
     # Generation controls (drift vs. strictness)
     "MODEL_ID":                 os.getenv("FT_MODEL_ID", "ft:gpt-4.1-mini-2025-04-14:easycloud::CA2f3fbc"),  # ★ main chat model
     "TEMPERATURE":              float(os.getenv("TEMPERATURE", "0.2")),  # ★ lower = stricter; higher = more flexible
-    "MAX_TOKENS":               int(os.getenv("MAX_TOKENS", "450")),     # ★ longer answers vs. concise
+    "MAX_TOKENS":               int(os.getenv("MAX_TOKENS", "450")),     # ★ longer answers vs. concise 
 
     # Embeddings model
     "EMBEDDING_MODEL":          os.getenv("EMBEDDING_MODEL", "text-embedding-ada-002"),  # ★ swap to text-embedding-3-large if desired
@@ -102,7 +102,7 @@ REFUSAL_SENTENCE = (
 )
 
 SYSTEM_PROMPT = (
-    "You are Rev. Ray Choi—a warm, compassionate pastor.\n"
+    "You are a bot known as 'PastorBot Ray' emulating Rev. Ray Choi—a warm, compassionate pastor.\n"
     "GROUNDING (CLOSED-BOOK):\n"
     "• Use ONLY the provided Context for facts.\n"
     "• Do NOT add definitions, history, examples, names (e.g., philosophers, theologians), dates, or Scripture unless they appear verbatim in Context.\n"
@@ -217,6 +217,43 @@ TEMPLATE = """
     @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
     .icon { width: 48px; height: 48px; stroke-width: 3; fill: none; }
     .tuning { font-size: 0.9rem; color: #555; background:#eef2f7; padding:0.5rem; border-left:3px solid #4a90e2; }
+
+    /* Collapsed "Context" section — subtle & out of the way */
+    .context-collapsible { margin-top: 0.75rem; }
+    .context-collapsible > summary {
+      cursor: pointer;
+      list-style: none;            /* hide default marker in some browsers */
+      color: #6b7280;              /* muted */
+      font-size: 0.85rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      user-select: none;
+    }
+    .context-collapsible > summary::-webkit-details-marker { display: none; }
+    .context-collapsible > summary:hover .ctx-summary-label { text-decoration: underline; }
+    .context-collapsible[open] > summary { color: #374151; } /* darker when open */
+    .ctx-summary-label {
+      font-weight: 600;
+      text-decoration: underline;
+      text-underline-offset: 2px;     /* nicer spacing */
+      text-decoration-thickness: 1.5px; /* optional */
+    }
+    .ctx-summary-hint  { font-weight: 400; opacity: 0.7; }
+
+    .ctx-list { margin: 0.5rem 0 0 0; padding-left: 1.25rem; }
+    .ctx-item { margin: 0.5rem 0; }
+    .ctx-link { font-size: 0.9rem; margin-bottom: 0.25rem; }
+    .ctx-chunk {
+      white-space: pre-line;
+      margin: 0.25rem 0 0.75rem 0;
+      padding: 0.5rem 0.75rem;
+      background: #f9fafb;
+      border-left: 3px solid #e5e7eb;
+      border-radius: 0.25rem;
+      color: #374151;
+      font-size: 0.9rem;
+    }
   </style>
 </head>
 <body>
@@ -247,17 +284,20 @@ TEMPLATE = """
       {% endfor %}
 
       {% if citations %}
-        <h3><strong>CITATIONS:</strong></h3>
-        <ul>
-          {% for item in citations %}
-            <li>
-              {{ item.link|safe }}<br>
-              <div style="white-space: pre-line; margin:0.5em 0; padding:0.5em; background:#f9f9f9; border-left:3px solid #ddd;">
-                {{ item.chunk }}
-              </div>
-            </li>
-          {% endfor %}
-        </ul>
+        <details class="context-collapsible" aria-label="Context supporting this answer">
+          <summary>
+            <span class="ctx-summary-label">Context</span>
+            <span class="ctx-summary-hint">(sermon excerpts used)</span>
+          </summary>
+          <ul class="ctx-list">
+            {% for item in citations %}
+              <li class="ctx-item">
+                <div class="ctx-link">{{ item.link|safe }}</div>
+                <div class="ctx-chunk">{{ item.chunk }}</div>
+              </li>
+            {% endfor %}
+          </ul>
+        </details>
       {% endif %}
     </div>
 
